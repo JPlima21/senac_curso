@@ -15,11 +15,15 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
 public class Formulario extends JFrame {
+
 	private JTextField nameField;
 	private JTextField emailField;
 	private JTextField phoneField;
@@ -30,6 +34,8 @@ public class Formulario extends JFrame {
 	private JRadioButton femaleRadio;
 	private JCheckBox newsletterCheckBox;
 	private JButton submitButton;
+
+	private DefaultTableModel tableModel;
 
 	public Formulario() {
 
@@ -103,6 +109,9 @@ public class Formulario extends JFrame {
 		add(mainPanel);
 
 		setVisible(true);
+
+		tableModel = new DefaultTableModel(new String[] { "Nome", "Email", "Telefone", "Endereço", "Data de nascimento",
+				"Preferência de contato", "Gênero", "Newlatter" }, 0);
 	}
 
 	private class SubmitButtonListener implements ActionListener {
@@ -122,8 +131,12 @@ public class Formulario extends JFrame {
 					"Nome: %s\nEmail: %s\nTelefone: %s\nEndereço: %s\nData de Nascimento: %s\nPreferência de Contato: %s\nGênero: %s\nAssinar Newsletter: %s",
 					name, email, phone, address, dob, contactPref, gender, newsletter);
 
-			JOptionPane.showMessageDialog(Formulario.this, message, "Informações do Formulário",
-					JOptionPane.INFORMATION_MESSAGE);
+//			JOptionPane.showMessageDialog(Formulario.this, message, "Informações do Formulário",
+//					JOptionPane.INFORMATION_MESSAGE);
+
+			tableModel.addRow(new Object[] { name, email, phone, address, dob, contactPref, gender, newsletter });
+
+			new InfoFrame(tableModel);
 		}
 	}
 
@@ -135,4 +148,22 @@ public class Formulario extends JFrame {
 			}
 		});
 	}
+}
+
+class InfoFrame extends JFrame {
+
+	public InfoFrame(DefaultTableModel tableModel) {
+		setTitle("Informações de formulário");
+		setSize(600, 300);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null);
+
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		JTable table = new JTable(tableModel);
+		JScrollPane scrollPane = new JScrollPane(table);
+		add(scrollPane, BorderLayout.CENTER);
+		setVisible(true);
+
+	}
+
 }
